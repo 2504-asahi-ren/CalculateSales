@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CalculateSales {
@@ -37,6 +39,20 @@ public class CalculateSales {
 		}
 
 		// ※ここから集計処理を作成してください。(処理内容2-1、2-2)
+		// 指定した「売上集計課題」ファイルに含まれるすべてのファイルを参照している
+		File[] files = new File(args[0]).listFiles();
+
+		// 条件に当てはまったものをListに追加
+		List<File> rcdFiles = new ArrayList<>();
+
+		//指定した「売上集計課題」にあるファイルの数だけ繰り返される。ファイル名が一致するものがあればListに追加
+		for(int i = 0; i < files.length ; i++) {
+			if("00000001.rcd".matches()) {
+				rcdFiles.add(files[i]);
+			}
+		}
+
+
 
 
 
@@ -67,7 +83,18 @@ public class CalculateSales {
 			String line;
 			// 一行ずつ読み込む
 			while((line = br.readLine()) != null) {
-				// ※ここの読み込み処理を変更してください。(処理内容1-2)
+				String[]items = line.split(",");//(処理内容1-2)
+				branchNames.put(items[0],items[1]);
+				branchSales.put(items[0], 0L);
+//				branchNames.put(002,"仙台支店" );
+//				branchSales.put(002, 0);
+//				branchNames.put(003,"東京支店");
+//				branchSales.put(003, 0);
+//				branchNames.put(004,"名古屋支店");
+//				branchSales.put(004, 0);
+//				branchNames.put(005,"大阪支店");
+//				branchSales.put(005, 0);
+
 				System.out.println(line);
 			}
 
