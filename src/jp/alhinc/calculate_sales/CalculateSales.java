@@ -47,10 +47,25 @@ public class CalculateSales {
 
 		//指定した「売上集計課題」にあるファイルの数だけ繰り返される。ファイル名が一致するものがあればListに追加
 		for(int i = 0; i < files.length ; i++) {
-			if("00000001.rcd".matches()) {
+			if(files[i].getName().matches("^[0-9]{8}.rcd$")) {
 				rcdFiles.add(files[i]);
 			}
 		}
+
+
+		private static final String FILE_NAME_BRANCH_LST =
+
+		//売上金額を保持するために新しいファイルを作成
+		List<String> saleFiles = new ArrayList<>();
+
+
+		for(int i = 0; i < rcdFiles.size(); i++) {
+			readFile(rcdFiles[i].files[i].getName().matches("^[0-9]{8}.rcd$"))
+
+
+
+		}
+
 
 
 
