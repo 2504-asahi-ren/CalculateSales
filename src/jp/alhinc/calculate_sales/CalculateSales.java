@@ -1,8 +1,10 @@
 package jp.alhinc.calculate_sales;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class CalculateSales {
 		// 指定した「売上集計課題」ファイルに含まれるすべてのファイルを参照している
 		File[] files = new File(args[0]).listFiles();
 
-		// 条件に当てはまったものをListに追加
+		// 条件に当てはまったものをListに追加するためのファイルを作る
 		List<File> rcdFiles = new ArrayList<>();
 
 		//指定した「売上集計課題」にあるファイルの数だけ繰り返される。ファイル名が一致するものがあればListに追加
@@ -52,18 +54,49 @@ public class CalculateSales {
 			}
 		}
 
+		BufferedReader br = null;
 
-		private static final String FILE_NAME_BRANCH_LST =
-
-		//売上金額を保持するために新しいファイルを作成
-		List<String> saleFiles = new ArrayList<>();
-
-
+//1
 		for(int i = 0; i < rcdFiles.size(); i++) {
-			readFile(rcdFiles[i].files[i].getName().matches("^[0-9]{8}.rcd$"))
+			try {
+				File file = rcdFiles.get(i);
+				FileReader fr = new FileReader(file);
+				br = new BufferedReader(fr);
+
+				String line;
+
+				List<String> seldsFile = new ArrayList<>();
+//2
+				while((line = br.readLine()) != null) {
+					seldsFile.add(line);
+				}
+//3
+				long longseldsfile = Long.parseLong(seldsFile.get(1));
+
+				Long saleAmount = branchSales.get(seldsFile.get(0)) + longseldsfile;
+
+				branchSales.put( seldsFile.get(0),saleAmount);
 
 
 
+
+
+
+			} catch(IOException e) {
+				System.out.println(UNKNOWN_ERROR);
+				//return false;
+			} finally {
+				// ファイルを開いている場合
+				if(br != null) {
+					try {
+						// ファイルを閉じる
+						br.close();
+					} catch(IOException e) {
+						System.out.println(UNKNOWN_ERROR);
+						//return false;
+					}
+				}
+			}
 		}
 
 
@@ -101,14 +134,7 @@ public class CalculateSales {
 				String[]items = line.split(",");//(処理内容1-2)
 				branchNames.put(items[0],items[1]);
 				branchSales.put(items[0], 0L);
-//				branchNames.put(002,"仙台支店" );
-//				branchSales.put(002, 0);
-//				branchNames.put(003,"東京支店");
-//				branchSales.put(003, 0);
-//				branchNames.put(004,"名古屋支店");
-//				branchSales.put(004, 0);
-//				branchNames.put(005,"大阪支店");
-//				branchSales.put(005, 0);
+
 
 				System.out.println(line);
 			}
@@ -142,6 +168,21 @@ public class CalculateSales {
 	 */
 	private static boolean writeFile(String path, String fileName, Map<String, String> branchNames, Map<String, Long> branchSales) {
 		// ※ここに書き込み処理を作成してください。(処理内容3-1)
+		BufferedWriter bw = null;
+
+		try {
+			File file = new File(path, fileName);
+			FileWriter fw = new FileWriter(file);
+			bw = new BufferedWriter(fw);
+
+
+
+		} catch(IOException e) {
+			// 例外が発生した時の処理
+
+		} finally {
+			// 必ず行う処理
+		}
 
 		return true;
 	}
