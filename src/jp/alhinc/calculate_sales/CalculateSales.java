@@ -170,18 +170,40 @@ public class CalculateSales {
 		// ※ここに書き込み処理を作成してください。(処理内容3-1)
 		BufferedWriter bw = null;
 
+
+
 		try {
+//			新しくファイルを作り、pathとfilenameを指定。
+//			変数bwに代入
 			File file = new File(path, fileName);
 			FileWriter fw = new FileWriter(file);
 			bw = new BufferedWriter(fw);
+//			変数keyにbranchNamesのkeyすべてを代入
+//			writeメソッドで支店番号、名前、金額を出力
+//			newLineメソッドで改行
+			for (String key : branchNames.keySet()) {
+				bw.write(key +"," + branchNames.get(key) + "," + branchSales.get(key));
+				bw.newLine();
+
+			}
 
 
 
 		} catch(IOException e) {
 			// 例外が発生した時の処理
-
+			System.out.println(UNKNOWN_ERROR);
+			return false;
 		} finally {
 			// 必ず行う処理
+			if(bw != null) {
+				try {
+					// ファイルを閉じる
+					bw.close();
+				} catch(IOException e) {
+					System.out.println(UNKNOWN_ERROR);
+					return false;
+				}
+			}
 		}
 
 		return true;
