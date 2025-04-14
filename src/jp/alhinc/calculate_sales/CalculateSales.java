@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,6 @@ public class CalculateSales {
 		// 支店コードと売上金額を保持するMap
 		Map<String, Long> branchSales = new HashMap<>();
 
-
-
 		// 支店定義ファイル読み込み処理
 		if(!readFile(args[0], FILE_NAME_BRANCH_LST, branchNames, branchSales)) {
 			return;
@@ -66,11 +65,12 @@ public class CalculateSales {
 					rcdFiles.add(files[i]);
 			}
 		}
-			//エラー処理2-1
-			//⽐較回数は売上ファイルの数よりも1回少ないため、
-			//繰り返し回数は売上ファイルのリストの数よりも1つ⼩さい数です。
+		//エラー処理2-1
+		//⽐較回数は売上ファイルの数よりも1回少ないため、
+		//繰り返し回数は売上ファイルのリストの数よりも1つ⼩さい数です。
 		for(int i = 0; i < rcdFiles.size() - 1; i++) {
 			int former = Integer.parseInt(rcdFiles.get(i).getName().substring(0, 8));
+			Collections.sort(rcdFiles);
 			int latter = Integer.parseInt(rcdFiles.get(i + 1).getName().substring(0, 8));
 			//⽐較する2つのファイル名の先頭から数字の8⽂字を切り出し、int型に変換します。
 			if((latter - former) != 1) {
@@ -95,19 +95,18 @@ public class CalculateSales {
 					salesFile.add(line);
 				}
 
-				//エラー処理2-3
-				if (!branchNames.containsKey(salesFile.get(0))) {
-				    //⽀店情報を保持しているMapに売上ファイルの⽀店コードが存在しなかった場合は、
-				    //エラーメッセージをコンソールに表⽰します。
-					System.out.println(FILE_NOT_CODE);
-					return;
-
-				}
 				//エラー処理2-4
 				if(salesFile.size() != 2){
 				    //売上ファイルの⾏数が2⾏ではなかった場合は、
 				    //エラーメッセージをコンソールに表⽰します。
 					System.out.println(FILE_NAME_OVER);
+					return;
+				}
+				//エラー処理2-3
+				if (!branchNames.containsKey(salesFile.get(0))) {
+				    //⽀店情報を保持しているMapに売上ファイルの⽀店コードが存在しなかった場合は、
+				    //エラーメッセージをコンソールに表⽰します。
+					System.out.println(FILE_NOT_CODE);
 					return;
 				}
 				//エラー処理3-3
@@ -118,15 +117,12 @@ public class CalculateSales {
 					return;
 				}
 				long longSalesFile = Long.parseLong(salesFile.get(1));
-
 				Long saleAmount = branchSales.get(salesFile.get(0)) + longSalesFile;
-
 				//エラー処理2-2
 				if(saleAmount >= 10000000000L){
 					System.out.println(FILE_OVER);
 					return;
 				}
-
 				branchSales.put(salesFile.get(0), saleAmount);
 			} catch(IOException e) {
 				System.out.println(UNKNOWN_ERROR);
@@ -167,18 +163,17 @@ public class CalculateSales {
 				System.out.println(FILE_NOT_EXIST);
 				return false;
 			}
-
 			FileReader fr = new FileReader(file);
 			br = new BufferedReader(fr);
 			String line;
 			// 一行ずつ読み込む
+			//(処理内容1-2)
 			while((line = br.readLine()) != null) {
-				String[]items = line.split(",");//(処理内容1-2)
+				String[]items = line.split(",");
 				if((items.length != 2) || (!items[0].matches("^[0-9]{3}$"))){
 					System.out.println(FILE_INVALID_FORMAT);
 					return false;
 				}
-
 				branchNames.put(items[0], items[1]);
 				branchSales.put(items[0], 0L);
 			}
