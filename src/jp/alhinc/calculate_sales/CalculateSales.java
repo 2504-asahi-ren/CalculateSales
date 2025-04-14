@@ -36,8 +36,8 @@ public class CalculateSales {
 	 */
 	public static void main(String[] args) {
 		if (args.length != 1) {
-		    //コマンドライン引数が1つ設定されていなかった場合は、
-		    //エラーメッセージをコンソールに表⽰します。
+			//コマンドライン引数が1つ設定されていなかった場合は、
+			//エラーメッセージをコンソールに表⽰します。
 			System.out.println(UNKNOWN_ERROR);
 			return;
 		}
@@ -109,7 +109,7 @@ public class CalculateSales {
 					return;
 				}
 				//エラー処理3-3
-				if(!salesFile.get(1).matches(("^[0-9]*$"))) {
+				if(!salesFile.get(1).matches(("^[0-9]+$"))) {
 				    //売上⾦額が数字ではなかった場合は、
 				    //エラーメッセージをコンソールに表⽰します。
 					System.out.println(UNKNOWN_ERROR);
