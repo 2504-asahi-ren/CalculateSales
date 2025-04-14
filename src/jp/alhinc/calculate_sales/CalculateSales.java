@@ -26,8 +26,8 @@ public class CalculateSales {
 	private static final String FILE_INVALID_FORMAT = "支店定義ファイルのフォーマットが不正です";
 	private static final String FILE_NOT_LINE = "売上ファイル名が連番になっていません";
 	private static final String FILE_OVER = "合計金額が10桁を超えました";
-	private static final String FILE_NOT_CODE = "<該当ファイル名>の支店コードが不正です";
-	private static final String FILE_NAME_OVER = "<該当ファイル名>のフォーマットが不正です";
+	private static final String FILE_NOT_CODE = "の支店コードが不正です";
+	private static final String FILE_NAME_OVER = "のフォーマットが不正です";
 
 	/**
 	 * メインメソッド
@@ -60,17 +60,17 @@ public class CalculateSales {
 
 		//指定した「売上集計課題」にあるファイルの数だけ繰り返される。ファイル名が一致するものがあればListに追加
 		for(int i = 0; i < files.length ; i++) {
-				//エラー処理3-2
-				if(files[i].isFile() && files[i].getName().matches("^[0-9]{8}.rcd$")) {
-					rcdFiles.add(files[i]);
+			//エラー処理3-2
+			if(files[i].isFile() && files[i].getName().matches("^[0-9]{8}.rcd$")) {
+				rcdFiles.add(files[i]);
 			}
 		}
 		//エラー処理2-1
 		//⽐較回数は売上ファイルの数よりも1回少ないため、
 		//繰り返し回数は売上ファイルのリストの数よりも1つ⼩さい数です。
+		Collections.sort(rcdFiles);
 		for(int i = 0; i < rcdFiles.size() - 1; i++) {
 			int former = Integer.parseInt(rcdFiles.get(i).getName().substring(0, 8));
-			Collections.sort(rcdFiles);
 			int latter = Integer.parseInt(rcdFiles.get(i + 1).getName().substring(0, 8));
 			//⽐較する2つのファイル名の先頭から数字の8⽂字を切り出し、int型に変換します。
 			if((latter - former) != 1) {
@@ -94,19 +94,18 @@ public class CalculateSales {
 				while((line = br.readLine()) != null) {
 					salesFile.add(line);
 				}
-
 				//エラー処理2-4
 				if(salesFile.size() != 2){
 				    //売上ファイルの⾏数が2⾏ではなかった場合は、
 				    //エラーメッセージをコンソールに表⽰します。
-					System.out.println(FILE_NAME_OVER);
+					System.out.println(rcdFiles.get(i).getName() + FILE_NAME_OVER);
 					return;
 				}
 				//エラー処理2-3
 				if (!branchNames.containsKey(salesFile.get(0))) {
 				    //⽀店情報を保持しているMapに売上ファイルの⽀店コードが存在しなかった場合は、
 				    //エラーメッセージをコンソールに表⽰します。
-					System.out.println(FILE_NOT_CODE);
+					System.out.println(rcdFiles.get(i).getName() + FILE_NOT_CODE);
 					return;
 				}
 				//エラー処理3-3
